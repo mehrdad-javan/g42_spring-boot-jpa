@@ -1,6 +1,7 @@
 package se.lexicon.demo.dao;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import se.lexicon.demo.entity.Address;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ public class AddressDaoImpl implements AddressDao {
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Address save(Address address) {
         entityManager.persist(address);
         return address;
@@ -31,12 +33,14 @@ public class AddressDaoImpl implements AddressDao {
     }
 
     @Override
+    @Transactional
     public void remove(Address address) {
         findById(address.getId()).orElseThrow(() -> new IllegalArgumentException("Data nor found Exception"));
         entityManager.remove(address);
     }
 
     @Override
+    @Transactional
     public Address update(Address address) {
         return entityManager.merge(address);
     }
