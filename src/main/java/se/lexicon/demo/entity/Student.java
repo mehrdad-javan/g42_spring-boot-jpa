@@ -29,6 +29,11 @@ public class Student { // TBL_STUDENT
 
     private LocalDateTime registerDate;
 
+    @OneToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    // foreign key (address_id) references address(id)
+    private Address address;
+
     public Student() {
         this.registerDate = LocalDateTime.now();
     }
@@ -39,6 +44,15 @@ public class Student { // TBL_STUDENT
         this.lastName = lastName;
         this.email = email;
         this.birthDate = birthDate;
+    }
+
+    public Student(String firstName, String lastName, String email, LocalDate birthDate, Address address) {
+        this();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.birthDate = birthDate;
+        setAddress(address);
     }
 
     public Student(int id, String firstName, String lastName, String email, LocalDate birthDate) {
@@ -104,6 +118,15 @@ public class Student { // TBL_STUDENT
 
     public void setRegisterDate(LocalDateTime registerDate) {
         this.registerDate = registerDate;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        //...
+        this.address = address;
     }
 
     @Override
