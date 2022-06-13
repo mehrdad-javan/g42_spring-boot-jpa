@@ -3,6 +3,8 @@ package se.lexicon.demo.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -33,6 +35,17 @@ public class Student { // TBL_STUDENT
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     // foreign key (address_id) references address(id)
     private Address address;
+
+    @OneToMany(mappedBy = "student")
+    private List<Book> borrowedBooks;
+
+    //@ManyToMany(mappedBy = "students")
+    @ManyToMany
+    @JoinTable(name = "students_courses",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
 
     public Student() {
         this.registerDate = LocalDateTime.now();
@@ -125,9 +138,67 @@ public class Student { // TBL_STUDENT
     }
 
     public void setAddress(Address address) {
-        //...
+        if (address != null) {
+            address.setStudent(this);
+        }
         this.address = address;
     }
+
+    public List<Book> getBorrowedBooks() {
+        if (borrowedBooks == null) borrowedBooks = new ArrayList<>();
+        return borrowedBooks;
+    }
+
+    public void setBorrowedBooks(List<Book> borrowedBooks) {
+        this.borrowedBooks = borrowedBooks;
+    }
+
+    public List<Course> getCourses() {
+        if (courses == null) courses = new ArrayList<>();
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+
+    // convenience methods for manipulating with list
+    public void borrowBook(Book book) {
+        if (book == null) throw new IllegalArgumentException("book data is null");
+        if (borrowedBooks == null) borrowedBooks = new ArrayList<>();
+
+        borrowedBooks.add(book);
+        book.setStudent(this);
+
+    }
+
+    public void returnBook(Book book) {
+        if (book == null) throw new IllegalArgumentException("book data is null");
+        if (borrowedBooks != null) {
+            book.setStudent(null);
+            borrowedBooks.remove(book);
+        }
+    }
+
+
+    public void addCourse(Course course) {
+        if (course == null) throw new IllegalArgumentException("course data is null");
+        if (courses == null) courses = new ArrayList<>();
+
+        if (!courses.contains(course)) courses.add(course);
+        //course.getStudents().add(this);
+
+    }
+
+
+    public void removeCourse(Course course) {
+        if (course == null) throw new IllegalArgumentException("course data is null");
+        if (courses == null) courses = new ArrayList<>();
+        //course.getStudents().remove(this);
+        courses.remove(course);
+    }
+
 
     @Override
     public boolean equals(Object o) {

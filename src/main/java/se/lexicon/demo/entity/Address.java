@@ -20,6 +20,11 @@ public class Address {
     @Column(nullable = false, length = 6)
     private String zipCode;
 
+    @OneToOne(mappedBy = "address")
+    // mappedBy attribute indicates that the entity in this side is the inverse of the relationship.
+    // it is used to define the referencing side of the relationship
+    private Student student;
+
     public Address() {
     }
 
@@ -66,6 +71,14 @@ public class Address {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     @Override
