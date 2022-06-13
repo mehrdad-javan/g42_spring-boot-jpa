@@ -31,12 +31,12 @@ public class Student { // TBL_STUDENT
 
     private LocalDateTime registerDate;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     // foreign key (address_id) references address(id)
     private Address address;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private List<Book> borrowedBooks;
 
     //@ManyToMany(mappedBy = "students")
